@@ -14,3 +14,4 @@ The backend API for **Grocify**, a grocery price monitoring service that lets us
 - **Node.js**: Server and API logic
 - **PostgreSQL**: Data storage for users, receipts, products, and credits
 - **Kojo**: Event-driven microservice framework for handling subscribers, services, and methods
+- **ChatGPT Vision**: Image processing and data extraction from uploaded receipt images
