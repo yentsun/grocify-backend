@@ -1,2 +1,16 @@
-# grocify-backend
-The backend API for Grocify, a grocery price monitoring service. Built with Node.js and PostgreSQL, this backend handles user authentication, receipt processing, price tracking, and a gamified credit system. It supports features for uploading and parsing receipts, viewing price data, and managing user credits.
+# Grocify Backend
+
+The backend API for **Grocify**, a grocery price monitoring service that lets users track prices from uploaded receipts, view trends, and engage in a gamified experience with credits and leaderboards.
+
+## Features
+
+- **User Authentication**: Register, login, and manage user sessions.
+- **Receipt Upload**: Loggers upload receipts to earn credits and contribute price data.
+- **Price Tracking**: Observers view price trends, product details, and shop locations.
+- **Credits and Leaderboards**: Gamified features to reward activity and rank Loggers.
+
+## Stack
+
+- **Node.js**: Server and API logic
+- **PostgreSQL**: Data storage for users, receipts, products, and credits
+- **Kojo**: Event-driven microservice framework for handling subscribers, services, and methods
