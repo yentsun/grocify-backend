@@ -23,7 +23,7 @@ export default function router(method, url) {
     const [ major, resourceId, minor ] = trimmedPath.split('/');
     const routePattern = '/' + [major, resourceId ? ':id' : undefined, minor].filter(p => p).join('/');
     const { routes } = kojo.state;
-    logger.debug('looking up route', { major, resourceId, minor }, 'in', Object.keys(routes).length, 'routes');
+    logger.debug('🧭 lookup route', { method, major, resourceId, minor }, 'in', Object.keys(routes).length, 'routes');
 
     // 404 pathname not found
     if (! routes[routePattern]) {

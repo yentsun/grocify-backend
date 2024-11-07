@@ -16,7 +16,7 @@ import AJV from 'ajv';
 export default function addRoute(routeConfig, handler) {
 
     const [ kojo, logger ] = this;
-    logger.debug('> register:', routeConfig);
+    logger.debug(routeConfig);
     const { method, pathname, access, schema } = routeConfig;
     let validator;
 
