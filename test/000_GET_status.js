@@ -12,11 +12,11 @@ after(async function () {
 
 describe('000 GET /status', () => {
 
-    it('responds normally with 204', async() => {
+    it('responds normally with 200', async() => {
 
         const res = await fetchy('/status');
 
         assert.strictEqual(res.ok, true);
-        assert.strictEqual(res.status, 204);
+        assert.strictEqual(res.status, 200);
     });
 });

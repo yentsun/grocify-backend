@@ -20,7 +20,7 @@ export default async function (req, res) {
     const { method, url } = req;
 
     const reqID = trid.seq();
-    logger.debug(`<- [${reqID}] ${method} ${url}`);
+    logger.debug(`<-- [${reqID}] ${method} ${url}`);
     req.headers['content-type'] && logger.debug('content-type is', req.headers['content-type']);
     const start = process.hrtime();
 
@@ -73,7 +73,7 @@ export default async function (req, res) {
 
     } catch (error) { // error response
 
-        symbol = '!!';
+        symbol = '❌';
         res.setHeader('Content-Type', 'text/plain');
 
         if (error instanceof HttpError) {

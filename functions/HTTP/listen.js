@@ -2,9 +2,11 @@ import http from 'http';
 
 
 /**
- * Start listening to requests
+ * Start an HTTP server and listen on the specified port.
  *
- * @return {Promise.<Object>} - node's httpServer
+ * @async
+ * @function listen
+ * @returns {Promise<http.Server>} A Promise that resolves to the HTTP server instance once it starts listening on the specified port.
  */
 export default async function listen() {
 
@@ -13,7 +15,7 @@ export default async function listen() {
     const { HTTP } = kojo.functions;
 
     const serverId = trid.base();
-    const server = http.createServer(HTTP.requestHandler);
+    const server = http.createServer(HTTP.requestMiddleware);
     server.on('close', () => {
         logger.info(`[${serverId}] closed`);
     });

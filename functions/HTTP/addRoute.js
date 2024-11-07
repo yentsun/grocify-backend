@@ -5,19 +5,19 @@ import AJV from 'ajv';
  * Register endpoint handler. It also compiles AJV's validation function as
  * 'validator'.
  *
- * @param {object} config - endpoint config object
- * @param {string} config.method - HTTP method
- * @param {string} config.pathname - HTTP pathname
- * @param {object} config.schema - AJV validation schema
- * @param {string} config.access - ACL access record ([principal, action, resource])
+ * @param {object} routeConfig - endpoint config object
+ * @param {string} routeConfig.method - HTTP method
+ * @param {string} routeConfig.pathname - HTTP pathname
+ * @param {object} routeConfig.schema - AJV validation schema
+ * @param {string} routeConfig.access - ACL access record ([principal, action, resource])
  * @param {function} handler - the handler function
  * @return {undefined}
  */
-export default function addHandler(config, handler) {
+export default function addRoute(routeConfig, handler) {
 
-    const [ gate, logger ] = this;
-    logger.debug('> register:', config);
-    const { method, pathname, access, schema } = config;
+    const [ kojo, logger ] = this;
+    logger.debug('> register:', routeConfig);
+    const { method, pathname, access, schema } = routeConfig;
     let validator;
 
     if (schema) {
@@ -35,10 +35,10 @@ export default function addHandler(config, handler) {
         validator = (new AJV()).compile(combinedSchema);
     }
 
-    const { handlers } = gate.state;
+    const { routes } = kojo.state;
 
-    if (! handlers[pathname])
-        handlers[pathname] = {};
+    if (! routes[pathname])
+        routes[pathname] = {};
 
-    handlers[pathname][method] = { handler, access, ...validator && { validator } };
+    routes[pathname][method] = { handler, access, ...validator && { validator } };
 };

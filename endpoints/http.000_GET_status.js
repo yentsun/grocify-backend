@@ -2,7 +2,7 @@ export default async (gate, logger) => {
 
     const { HTTP } = gate.functions;
 
-    HTTP.addHandler({
+    HTTP.addRoute({
 
         method: 'GET',
         pathname: '/status'

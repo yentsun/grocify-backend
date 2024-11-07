@@ -12,7 +12,7 @@ export async function boot() {
     console.log('> init Kojo');
     const kojo = new Kojo(config.kojo);
     kojo.set('config', config);
-    kojo.set('handlers', {});
+    kojo.set('routes', {});
 
     console.log('> init trid');
     kojo.set('trid', new TRID({ prefix: kojo.id, length: 4 }));
