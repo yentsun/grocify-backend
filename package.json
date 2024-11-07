@@ -4,7 +4,7 @@
   "description": "The backend API for Grocify, a grocery price monitoring service. Built with Node.js and PostgreSQL, this backend handles user authentication, receipt processing, price tracking, and a gamified credit system. It supports features for uploading and parsing receipts, viewing price data, and managing user credits.",
   "main": "boot.js",
   "scripts": {
-    "start": "node boot.js",
+    "start": "node run.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "type": "module",
@@ -24,5 +24,9 @@
     "kojo": "^8.2.1",
     "trid": "^0.1.2",
     "yt-config": "^4.0.4"
+  },
+  "devDependencies": {
+    "mocha": "^10.8.2",
+    "sinon": "^19.0.2"
   }
 }

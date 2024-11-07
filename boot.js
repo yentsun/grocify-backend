@@ -4,7 +4,7 @@ import Kojo from 'kojo';
 import TRID from 'trid';
 
 
-async function boot() {
+export async function boot() {
 
     console.log('> load config');
     const config = await configLoader(path.join(process.cwd(), 'config.ini'));
@@ -25,5 +25,3 @@ async function boot() {
 
     return kojo;
 }
-
-boot().catch(error => { throw error });
