@@ -3,6 +3,9 @@ import { HttpError } from 'http-errors';
 import HRT2sec from '../../lib/HRT2sec.js';
 
 
+// Set limit to 1MB
+const MAX_CONTENT_LENGTH = 1e6;
+
 /**
  * General request handler
  *
@@ -11,7 +14,7 @@ import HRT2sec from '../../lib/HRT2sec.js';
  * @param {Object} res - ServerResponse (https://nodejs.org/api/http.html#http_class_http_serverresponse)
  * @return {Promise}
  */
-export default async function (req, res) {
+export default async function requestMiddleware(req, res) {
 
     const [ kojo, logger ] = this;
     const { trid } = kojo.state;
@@ -34,6 +37,12 @@ export default async function (req, res) {
     let buffer = '';
     req.on('data', (data) => {
         buffer += decoder.write(data);
+
+        // Check Content-Length and end connection if over limit
+        if(buffer.length > MAX_CONTENT_LENGTH){
+            req.connection.destroy();
+            logger.error(`⚠ request content length exceeded limit of ${MAX_CONTENT_LENGTH} bytes`);
+        }
     });
     const requestBody = await new Promise(resolve => {
         req.on('end', () => {
@@ -62,7 +71,7 @@ export default async function (req, res) {
         // run authorization if any
         if (access) {
             const [principalField] = access;
-            req[principalField] = await HTTP.authorize(req, access); // like `req.playerId = PLR-687687687`
+            req[principalField] = await HTTP.authorize(req, access);
         }
 
         // call endpoint handler
