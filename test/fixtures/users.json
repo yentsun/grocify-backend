@@ -1,0 +1,32 @@
+[
+    {
+        "name": "Alice Smith",
+        "email": "alice.smith@example.com",
+        "password": "alicepassword",
+        "createdAt": "2023-11-10T10:00:00Z"
+    },
+    {
+        "name": "Bob Johnson",
+        "email": "bob.johnson@example.com",
+        "password": "bobpassword",
+        "createdAt": "2023-11-11T11:00:00Z"
+    },
+    {
+        "name": "Carol White",
+        "email": "carol.white@example.com",
+        "password": "carolpassword",
+        "createdAt": "2023-11-12T12:00:00Z"
+    },
+    {
+        "name": "David Brown",
+        "email": "david.brown@example.com",
+        "password": "davidpassword",
+        "createdAt": "2023-11-13T13:00:00Z"
+    },
+    {
+        "name": "Eve Davis",
+        "email": "eve.davis@example.com",
+        "password": "evepassword",
+        "createdAt": "2023-11-14T14:00:00Z"
+    }
+]
