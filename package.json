@@ -5,6 +5,7 @@
   "main": "boot.js",
   "scripts": {
     "start": "node run.js",
+    "migrate": "node ./migrate.js migrate",
     "test": "mocha --exit --timeout 200000 --experimental-json-modules --experimental-specifier-resolution=node"
   },
   "type": "module",
@@ -19,6 +20,7 @@
   },
   "homepage": "https://github.com/yentsun/grocify-backend#readme",
   "dependencies": {
+    "@urbica/pg-migrate": "^1.2.2",
     "ajv": "^8.17.1",
     "http-errors": "^2.0.0",
     "kojo": "^8.2.1",
