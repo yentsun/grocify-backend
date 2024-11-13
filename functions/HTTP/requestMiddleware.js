@@ -19,7 +19,6 @@ export default async function requestMiddleware(req, res) {
     const [ kojo, logger ] = this;
     const { trid } = kojo.state;
     const { HTTP } = kojo.functions;
-
     const { method, url } = req;
 
     const reqID = trid.seq();

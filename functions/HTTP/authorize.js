@@ -1,4 +1,5 @@
 import httpErrors from 'http-errors';
+import { userStatuses } from '../../dictionary/index.js';
 
 
 const { BadRequest, Forbidden } = httpErrors;
@@ -17,11 +18,13 @@ const { BadRequest, Forbidden } = httpErrors;
  */
 export default async function (req, access) {
 
-    const [ gate, logger ] = this;
-    const { tasu } = gate.state;
+    const [ kojo, logger ] = this;
 
-    if (! req.headers.authorization)
-        throw new BadRequest('No authorization header');
+    if (! req.headers.authorization) {
+        logger.debug('🛂❌ no auth header');
+        req.userStatus = userStatuses.anonymous;
+        return;
+    }
 
     const token = req.headers.authorization.split('Bearer ')[1];
     logger.debug('checking token presence');

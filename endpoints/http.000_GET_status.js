@@ -1,6 +1,6 @@
-export default async (gate, logger) => {
+export default async (kojo, logger) => {
 
-    const { HTTP } = gate.functions;
+    const { HTTP } = kojo.functions;
 
     HTTP.addRoute({
 

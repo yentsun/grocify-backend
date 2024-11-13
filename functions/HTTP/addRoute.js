@@ -32,7 +32,7 @@ export default function addRoute(routeConfig, handler) {
             additionalProperties: false,
             minProperties: [ query, body ].filter(p => p && (p.required || p.minItems)).length
         };
-        validator = (new AJV()).compile(combinedSchema);
+        validator = (new AJV({ verbose: true, coerceTypes: true, $data: true, strict: false })).compile(combinedSchema);
     }
 
     const { routes } = kojo.state;
