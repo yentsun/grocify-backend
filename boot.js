@@ -2,6 +2,7 @@ import * as path from 'node:path';
 import configLoader from 'yt-config';
 import Kojo from 'kojo';
 import TRID from 'trid';
+import { PrismaClient } from '@prisma/client'
 
 
 export async function boot() {
@@ -14,7 +15,10 @@ export async function boot() {
     kojo.set('config', config);
     kojo.set('routes', {});
 
-    console.log('> init trid');
+    console.log('> init Prisma')
+    kojo.set('prisma', new PrismaClient());
+
+    console.log('> init Trid');
     kojo.set('trid', new TRID({ prefix: kojo.id, length: 4 }));
 
     console.log('> wait for ready');

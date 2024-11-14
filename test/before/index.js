@@ -34,9 +34,15 @@ export async function beforeAll() {
 
 export async function afterAll() {
 
-    const { httpServer } = kojo.state;
-    console.log('> stopping http server');
+    const { httpServer, config, prisma } = kojo.state;
+    console.log('> stop http server');
     httpServer.close();
 
+    console.log('> truncate database');
+    await prisma.$executeRaw`TRUNCATE TABLE "User" RESTART IDENTITY CASCADE;`;
+    await prisma.$disconnect();
+
     sinon.restore();
+
+    console.log('🏁 DONE');
 }

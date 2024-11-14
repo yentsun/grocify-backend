@@ -12,7 +12,10 @@ describe('001 POST /users', () => {
             method: 'POST',
             body: JSON.stringify(users[0]) });
 
+        console.log(res.body)
+
         assert.strictEqual(res.ok, true);
         assert.strictEqual(res.status, 201);
+        assert.strictEqual(res.body.newUser.name, 'Alice Smith');
     });
 });

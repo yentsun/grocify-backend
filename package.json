@@ -5,6 +5,7 @@
   "main": "boot.js",
   "scripts": {
     "start": "node run.js",
+    "db-pull": "npx prisma db pull",
     "db-migrate": "npx prisma migrate dev",
     "test": "mocha --exit --timeout 200000 --experimental-json-modules --experimental-specifier-resolution=node"
   },
@@ -22,8 +23,10 @@
   "dependencies": {
     "@prisma/client": "^5.22.0",
     "ajv": "^8.17.1",
+    "bcrypt": "^5.1.1",
     "http-errors": "^2.0.0",
     "kojo": "^8.2.1",
+    "nanoid": "^5.0.8",
     "trid": "^0.1.2",
     "yt-config": "^4.0.4"
   },

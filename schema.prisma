@@ -7,12 +7,12 @@ datasource db {
     url      = env("PG_URL")
 }
 
-model users {
-    id           String    @id @db.Char(12)
+model User {
+    id           String    @id @db.Char(10)
     name         String    @db.VarChar(50)
     email        String    @unique @db.VarChar(100)
-    passwordHash String    @db.VarChar(255)
-    createdAt    DateTime? @default(now()) @db.Timestamp(6)
-    updatedAt    DateTime? @default(now()) @db.Timestamp(6)
+    passwordHash String    @db.Char(60)
+    createdAt    DateTime? @default(now()) @db.Timestamptz(3)
+    updatedAt    DateTime? @default(now()) @db.Timestamptz(3)
     credits      Int?      @default(0)
 }

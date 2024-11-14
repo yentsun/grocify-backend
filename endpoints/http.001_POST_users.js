@@ -1,6 +1,12 @@
+import bcrypt from 'bcrypt';
+import httpErrors from 'http-errors';
+import { customAlphabet } from 'nanoid';
+
+
 export default async (kojo, logger) => {
 
-    const { HTTP, User } = kojo.functions;
+    const { HTTP } = kojo.functions;
+    const { prisma } = kojo.state;
 
     HTTP.addRoute({
         method: 'POST',
@@ -15,13 +21,18 @@ export default async (kojo, logger) => {
 
         const { name, email, password } = req.body;
 
-        const newUser = await User.create({ name, email, password });
+        const passwordHash = await bcrypt.hash(password, 12);
+        const nanoid = customAlphabet(`123${name}`.toLowerCase().replace(/ /g,''), 10);
+        const id = nanoid();
+        logger.debug('create user', { email, id, name }, '; pwd:', password.length);
+        const newUser = await prisma.User.create({ data: { id, name, email, passwordHash }});
 
-        if (newUser) {
-            logger.info('👤🔰 new user:', newUser);
-
+        if (! newUser) {
+            throw new httpErrors.Conflict('failed to create new user');
         }
 
-        return 'ok';
+        logger.info('👤🔰 new user:', newUser);
+        res.statusCode = 201;
+        return { newUser };
     })
 };
