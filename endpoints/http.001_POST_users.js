@@ -25,14 +25,18 @@ export default async (kojo, logger) => {
         const nanoid = customAlphabet(`123${name}`.toLowerCase().replace(/ /g,''), 10);
         const id = nanoid();
         logger.debug('create user', { email, id, name }, '; pwd:', password.length);
-        const newUser = await prisma.User.create({ data: { id, name, email, passwordHash }});
 
-        if (! newUser) {
-            throw new httpErrors.Conflict('failed to create new user');
+        try {
+            const newUser = await prisma.User.create({ data: { id, name, email, passwordHash }});
+            logger.info('👤🔰 new user:', newUser);
+            res.statusCode = 201;
+            return { newUser };
+
+        } catch (error) {
+            logger.error(error.message);
+
+            if (error.code === 'P2002')
+                throw new httpErrors.Conflict('user already registered');
         }
-
-        logger.info('👤🔰 new user:', newUser);
-        res.statusCode = 201;
-        return { newUser };
     })
 };
