@@ -11,9 +11,11 @@ jobs:
 
     services:
       postgres:
-        image: postgres
+        image: postgres:13
         env:
           POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: pg-user
+          POSTGRES_DB: ci-db
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -40,4 +42,4 @@ jobs:
         run: npm test
         env:
           NODE_ENV: ci
-          PG_URL: postgres
+          PG_URL: postgresql://pg-user:postgres@postgres/ci-db
