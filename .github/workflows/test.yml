@@ -40,4 +40,4 @@ jobs:
         run: npm test
         env:
           NODE_ENV: ci
-          POSTGRES_URL: postgres
+          PG_URL: postgres
