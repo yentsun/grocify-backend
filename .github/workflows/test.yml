@@ -42,4 +42,4 @@ jobs:
         run: npm test
         env:
           NODE_ENV: ci
-          PG_URL: postgresql://pg-user:postgres@postgres/ci-db
+          PG_URL: postgresql://pg-user:postgres@localhost/ci-db
