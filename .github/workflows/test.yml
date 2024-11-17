@@ -9,6 +9,10 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      NODE_ENV: ci
+      PG_URL: postgresql://pg-user:postgres@localhost/ci-db
+
     services:
       postgres:
         image: postgres:13
@@ -45,6 +49,4 @@ jobs:
 
       - name: Run tests
         run: npm test
-        env:
-          NODE_ENV: ci
-          PG_URL: postgresql://pg-user:postgres@localhost/ci-db
+
