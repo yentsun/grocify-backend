@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import httpErrors from 'http-errors';
-import { customAlphabet } from 'nanoid';
+import { nanoid } from 'nanoid';
 
 
 export default async (kojo, logger) => {
@@ -22,8 +22,7 @@ export default async (kojo, logger) => {
         const { name, email, password } = req.body;
 
         const passwordHash = await bcrypt.hash(password, 12);
-        const nanoid = customAlphabet(`123${name}`.toLowerCase().replace(/ /g,''), 10);
-        const id = nanoid();
+        const id = `U${nanoid(9)}`;
         logger.debug('create user', { email, id, name }, '; pwd:', password.length);
 
         try {

@@ -12,7 +12,20 @@ model User {
     name         String    @db.VarChar(50)
     email        String    @unique @db.VarChar(100)
     passwordHash String    @db.Char(60)
-    createdAt    DateTime? @default(now()) @db.Timestamptz(3)
+    createdAt    DateTime  @default(now()) @db.Timestamptz(3)
     updatedAt    DateTime? @default(now()) @db.Timestamptz(3)
     credits      Int?      @default(0)
+
+    authTokens AuthToken[] // Relation to AuthToken
+}
+
+model AuthToken {
+    id         String    @id @db.Char(15)
+    userId     String    @db.Char(10)
+    issuedAt   DateTime  @default(now()) @db.Timestamptz(3)
+    extendedAt DateTime? @default(now()) @db.Timestamptz(3)
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([userId]) // Index for quick lookup by userId
 }

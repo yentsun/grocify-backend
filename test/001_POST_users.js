@@ -14,7 +14,7 @@ describe('001 POST /users', () => {
 
         assert.strictEqual(res.ok, true);
         assert.strictEqual(res.status, 201);
-        assert.strictEqual((await res.json()).newUser.name, 'Alice Smith');
+        assert.strictEqual((await res.json()).newUser.name, users[0].name);
     });
 
     it('rejects payload with existing email', async () => {

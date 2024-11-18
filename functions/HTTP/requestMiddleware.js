@@ -22,7 +22,7 @@ export default async function requestMiddleware(req, res) {
     const { method, url } = req;
 
     const reqID = trid.seq();
-    logger.debug(`<-- [${reqID}] ${method} ${url}`);
+    logger.debug(`<<< [${reqID}] ${method} ${url}`);
     req.headers['content-type'] && logger.debug('content-type is', req.headers['content-type']);
     const start = process.hrtime();
 
@@ -51,7 +51,7 @@ export default async function requestMiddleware(req, res) {
     }); // TODO add content length limit!
 
     let responseBody = '';
-    let symbol = '->';
+    let symbol = '>>>';
 
     // general request handling
     try {
