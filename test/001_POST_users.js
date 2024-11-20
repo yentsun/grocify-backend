@@ -12,7 +12,6 @@ describe('001 POST /users', () => {
             method: 'POST',
             body: JSON.stringify(users[0]) });
 
-        assert.strictEqual(res.ok, true);
         assert.strictEqual(res.status, 201);
         assert.strictEqual((await res.json()).newUser.name, users[0].name);
     });
@@ -23,7 +22,6 @@ describe('001 POST /users', () => {
             method: 'POST',
             body: JSON.stringify(users[0]) });
 
-        assert.strictEqual(res.ok, false);
         assert.strictEqual(res.status, 409);
     });
 });

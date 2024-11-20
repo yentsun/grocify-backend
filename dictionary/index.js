@@ -1,4 +1,5 @@
 import userStatuses from './userStatuses.js';
+import errorCodes from './errorCodes.js';
 
 
-export { userStatuses };
+export { userStatuses, errorCodes };

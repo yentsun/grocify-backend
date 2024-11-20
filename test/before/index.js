@@ -5,6 +5,7 @@ import { boot } from '../../boot.js';
 export let fetchy;
 export let kojo;
 export let baseURL;
+export let instances;
 
 const commonHeaders = {
     'x-platform': 'linux',
@@ -34,7 +35,7 @@ export async function beforeAll() {
 
 export async function afterAll() {
 
-    const { httpServer, config, prisma } = kojo.state;
+    const { httpServer, prisma } = kojo.state;
     console.log('> stop http server');
     httpServer.close();
 
@@ -45,4 +46,14 @@ export async function afterAll() {
     sinon.restore();
 
     console.log('🏁 DONE');
+}
+
+export async function loadFixtures() {
+
+
+
+    const [] = await Promise.all([
+
+    ]);
+
 }

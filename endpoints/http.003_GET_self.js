@@ -1,16 +1,17 @@
 import bcrypt from 'bcrypt';
 import httpErrors from 'http-errors';
+import { nanoid } from 'nanoid';
 
 
 export default async (kojo, logger) => {
 
-    const { HTTP, AuthToken } = kojo.functions;
+    const { HTTP } = kojo.functions;
     const { prisma } = kojo.state;
 
     HTTP.addRoute({
-        method: 'POST',
-        pathname: '/login',
-        access: [ 'anonymous', 'login' ],
+        method: 'GET',
+        pathname: '/self',
+        access: [ 'user', 'get', 'self' ],
         schema: { body: {
             email: { type: 'string', format: 'email' },
             password: { type: 'string', minLength: 6 }}}
@@ -26,14 +27,13 @@ export default async (kojo, logger) => {
             throw new httpErrors.NotFound('user not found');
 
         logger.debug('🛂 verify password');
-        if (! await bcrypt.compare(password, user.passwordHash))
+        const ok = await bcrypt.compare(password, user.passwordHash);
+
+        if (! ok)
             throw new httpErrors.Unauthorized();
 
         logger.debug('🔑 issue token for:', user.id);
-        const token = await AuthToken.issue(user.id);
-
-        kojo.state.alice = user;
-
+        const token = await prisma.AuthToken.create({ data: { id: `T${nanoid(14)}`, userId: user.id }});
         res.statusCode = 201;
         return { token: token.id, user };
     })

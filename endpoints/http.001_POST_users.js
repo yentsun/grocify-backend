@@ -1,12 +1,10 @@
-import bcrypt from 'bcrypt';
 import httpErrors from 'http-errors';
-import { nanoid } from 'nanoid';
+import { errorCodes } from '../dictionary/index.js';
 
 
 export default async (kojo, logger) => {
 
-    const { HTTP } = kojo.functions;
-    const { prisma } = kojo.state;
+    const { HTTP, User } = kojo.functions;
 
     HTTP.addRoute({
         method: 'POST',
@@ -19,23 +17,17 @@ export default async (kojo, logger) => {
 
     }, async (req, res) => {
 
-        const { name, email, password } = req.body;
-
-        const passwordHash = await bcrypt.hash(password, 12);
-        const id = `U${nanoid(9)}`;
-        logger.debug('create user', { email, id, name }, '; pwd:', password.length);
-
         try {
-            const newUser = await prisma.User.create({ data: { id, name, email, passwordHash }});
+            const newUser = await User.create(req.body);
             logger.info('👤🔰 new user:', newUser);
             res.statusCode = 201;
             return { newUser };
 
         } catch (error) {
-            logger.error(error.message);
+            logger.error(error);
 
-            if (error.code === 'P2002')
-                throw new httpErrors.Conflict('user already registered');
+            if (error.code === errorCodes.duplicate)
+                throw new httpErrors.Conflict(error.message);
         }
     })
 };
