@@ -11,11 +11,11 @@ after(async function () {
     await afterAll();
 });
 
-describe('000 GET /status', () => {
+describe('000 GET /health', () => {
 
     it('responds normally with 200', async() => {
 
-        const res = await fetchy('/status');
+        const res = await fetchy('/health');
 
         assert.strictEqual(res.ok, true);
         assert.strictEqual(res.status, 200);

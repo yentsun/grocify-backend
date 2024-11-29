@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import httpErrors from 'http-errors';
+import { permissionNames } from '../dictionary/index.js';
 
 
 export default async (kojo, logger) => {
@@ -9,7 +10,7 @@ export default async (kojo, logger) => {
     HTTP.addRoute({
         method: 'POST',
         pathname: '/login',
-        access: [ 'anonymous', 'login' ],
+        permission: permissionNames.login,
         schema: { body: {
             email: { type: 'string', format: 'email' },
             password: { type: 'string', minLength: 6 }}}

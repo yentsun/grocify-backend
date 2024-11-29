@@ -1,3 +1,6 @@
+import { permissionNames } from '../dictionary/index.js';
+
+
 export default async (kojo, logger) => {
 
     const { HTTP } = kojo.functions;
@@ -5,10 +8,11 @@ export default async (kojo, logger) => {
     HTTP.addRoute({
 
         method: 'GET',
-        pathname: '/status'
+        pathname: '/health',
+        permission: permissionNames.healthCheck
 
     }, async () => {
-        logger.debug('returning status');
+        logger.debug('check health');
         return 'ok';
     })
 };

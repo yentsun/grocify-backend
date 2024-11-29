@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import httpErrors from 'http-errors';
 import { nanoid } from 'nanoid';
+import { permissionNames } from '../dictionary/index.js';
 
 
 export default async (kojo, logger) => {
@@ -11,7 +12,8 @@ export default async (kojo, logger) => {
     HTTP.addRoute({
         method: 'GET',
         pathname: '/self',
-        access: [ 'user', 'get', 'self' ]
+        permission: permissionNames.getSelf
+
     }, async (req, res) => {
 
         const { email, password } = req.body;

@@ -1,5 +1,5 @@
 import httpErrors from 'http-errors';
-import { errorCodes } from '../dictionary/index.js';
+import { errorCodes, permissionNames } from '../dictionary/index.js';
 
 
 export default async (kojo, logger) => {
@@ -9,7 +9,7 @@ export default async (kojo, logger) => {
     HTTP.addRoute({
         method: 'POST',
         pathname: '/users',
-        access: [ 'anonymous', 'create', 'user' ],
+        permission: permissionNames.registerSelf,
         schema: { body: {
             name: { type: 'string', minLength: 3, maxLength: 50 },
             email: { type: 'string', format: 'email' },

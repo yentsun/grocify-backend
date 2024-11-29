@@ -1,3 +1,4 @@
 export default {
-    duplicate: 'duplicate'
+    duplicate: 'duplicate',
+    notRegistered: 'notRegistered'
 }

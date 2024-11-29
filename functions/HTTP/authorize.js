@@ -1,61 +1,49 @@
+import assert from 'assert';
 import httpErrors from 'http-errors';
-import { userStatuses } from '../../dictionary/index.js';
+import { userRoles } from '../../dictionary/index.js';
+import permissions from '../../permissions.js';
 
 
-const { BadRequest, Forbidden } = httpErrors;
-
-/**
- * Authorize a request for a specific access record.
- * 1. Extract JWT
- * 2. Map shorthand properties to real ones
- * 3. Perform a call to `checkACE`
- * 4. Throw if no permission
- * 5. Return principal value
- *
- * @param {Object<IncomingMessage>} req - the request
- * @param {Array} access - access 'tuple': [principal, action, resource]
- * @return {String} - principal ID value (later objects probably)
- */
-export default async function (req, access) {
+export default async function (req, permission) {
 
     const [ kojo, logger ] = this;
+    const { AuthToken } = kojo.functions;
+    assert(permission, `No permission defined`);
 
     if (! req.headers.authorization) {
         logger.debug('🛂❌ no auth header');
-        req.userStatus = userStatuses.anonymous;
+        req.state.role = userRoles.anonymous;
+    }
+
+    if (req.headers.authorization) {
+        const tokenId = req.headers.authorization.split('Bearer ')[1];
+        logger.debug('check token presence');
+
+        if (! tokenId)
+            throw new httpErrors.BadRequest('No authorization token');
+
+        logger.debug('🛂🔑 verifying token:', tokenId);
+        const token = await AuthToken.verify(tokenId) ;
+
+        if (! token)
+            throw new httpErrors.BadRequest('Token verification failed');
+    }
+
+    logger.debug('🛂📃 check permission:', req.state.role, permission);
+    const checks = permissions[req.state.role][permission];
+
+    if (! checks?.length) {
+        logger.debug('💨 no checks, OK');
         return;
     }
 
-    const tokenId = req.headers.authorization.split('Bearer ')[1];
-    logger.debug('checking token presence');
-
-    if (! tokenId)
-        throw new BadRequest('No authorization token');
-
-    logger.debug('🛂🔑 verifying token', tokenId);
-    const token = await AuthToken.verify(tokenId) ;
-
-    if (! token)
-        throw new BadRequest('Token verification failed');
-
-    // extract principal ID
-    const { userId } = token;
-
-    // authorize
-    const [ principalField, action, resource ] = access;
-
-    if (`${type}Id` !== principalField) {
-        // token principal type doesn't match endpoint principal type
-        // example: we are authorizing player but pass a token for a facility
-        throw new BadRequest('Principal type mismatch');
+    try {
+        logger.debug('🛂🔎 perform checks', checks.length);
+        assert(checks.every(check => Boolean(check(req))));
+        logger.debug('🛂✔ OK');
+    } catch (error) {
+        throw new httpErrors.Forbidden(error.message);
     }
 
-    logger.debug('authorizing', type, id, action, resource);
-    const can = await tasu.request(t.checkACE, [ id, action, resource ]);
 
-    if (! can)
-        throw new Forbidden('Access denied');
-
-    // fetch & attach authorized principal
-    req.principalId = id;
 };

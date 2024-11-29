@@ -21,15 +21,14 @@ export default async function requestMiddleware(req, res) {
     const { HTTP } = kojo.functions;
     const { method, url } = req;
 
-    const reqID = trid.seq();
-    logger.debug(`<<< [${reqID}] ${method} ${url}`);
+    req.state = { id: trid.seq() };
+    logger.debug(`<<< [${req.state.id}] 🏁 ${method} ${url}`);
+    logger.debug('🧢 headers:', req.headers);
     req.headers['content-type'] && logger.debug('content-type is', req.headers['content-type']);
     const start = process.hrtime();
 
     // set general headers
-    res.sendDate = true;
-    res.setHeader('X-Request-ID', reqID);
-    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('X-Request-ID', req.state.id);
 
     // capture body
     const decoder = new StringDecoder('utf-8');
@@ -56,8 +55,8 @@ export default async function requestMiddleware(req, res) {
     // general request handling
     try {
         // extract endpoint config and parameters
-        const { resourceId, handler, access, query, validator } = HTTP.router(method, url);
-        req.resourceId = resourceId;
+        const { resourceId, handler, permission, query, validator } = HTTP.router(method, url);
+        req.state.resourceId = resourceId;
         req.query = query;
 
         // parse JSON body
@@ -67,17 +66,16 @@ export default async function requestMiddleware(req, res) {
         if (validator)
             HTTP.validate(req, validator);
 
-        // run authorization if any
-        if (access) {
-            const [principalField] = access;
-            req[principalField] = await HTTP.authorize(req, access);
-        }
+        // authorization
+        await HTTP.authorize(req, permission);
 
         // call endpoint handler
         const result = await handler(req, res);
 
-        if (typeof result === 'object')
+        if (typeof result === 'object') {
+            res.setHeader('Content-Type', 'application/json');
             responseBody = JSON.stringify(result);
+        }
 
     } catch (error) { // error response
 
@@ -98,7 +96,7 @@ export default async function requestMiddleware(req, res) {
         const length = Buffer.byteLength(responseBody);
         res.setHeader('Content-Length', length);
 
-        logger.debug(`${symbol} [${reqID}] ${res.statusCode} / ${length} bytes / ${HRT2sec(process.hrtime(start))} sec \n${JSON.stringify(res.getHeaders(), null, 2)} \n-----------------------------\n${responseBody}\n-----------------------------`);
+        logger.debug(`${symbol} [${req.state.id}] ${res.statusCode} / ${length} bytes / ${HRT2sec(process.hrtime(start))} sec \n${JSON.stringify(res.getHeaders(), null, 2)} \n-----------------------------\n${responseBody}\n-----------------------------`);
         res.end(responseBody);
     }
 };

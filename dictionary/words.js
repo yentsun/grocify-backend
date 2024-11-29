@@ -1,4 +1,4 @@
 export default {
     anonymous: 'anonymous',
-    valid: 'valid'
-};
+    registered: 'registered'
+}

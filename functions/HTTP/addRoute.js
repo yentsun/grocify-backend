@@ -2,22 +2,22 @@ import AJV from 'ajv';
 
 
 /**
- * Register endpoint handler. It also compiles AJV's validation function as
- * 'validator'.
+ * Add a route with the specified configuration and handler to the application's routes.
  *
- * @param {object} routeConfig - endpoint config object
- * @param {string} routeConfig.method - HTTP method
- * @param {string} routeConfig.pathname - HTTP pathname
- * @param {object} routeConfig.schema - AJV validation schema
- * @param {string} routeConfig.access - ACL access record ([principal, action, resource])
- * @param {function} handler - the handler function
- * @return {undefined}
+ * @param {Object} routeConfig - Configuration object for the new route.
+ * @param {string} routeConfig.method - HTTP method for the route (e.g., GET, POST).
+ * @param {string} routeConfig.pathname - URI path for the route.
+ * @param {string} routeConfig.permission - Permission required to access the route.
+ * @param {Object} routeConfig.schema - Schema object defining the expected request data structure.
+ * @param {Object} handler - Function to handle the request for the route.
+ *
+ * @return {void}
  */
 export default function addRoute(routeConfig, handler) {
 
     const [ kojo, logger ] = this;
     logger.debug(routeConfig);
-    const { method, pathname, access, schema } = routeConfig;
+    const { method, pathname, permission, schema } = routeConfig;
     let validator;
 
     if (schema) {
@@ -40,5 +40,5 @@ export default function addRoute(routeConfig, handler) {
     if (! routes[pathname])
         routes[pathname] = {};
 
-    routes[pathname][method] = { handler, access, validator };
+    routes[pathname][method] = { handler, permission, validator };
 };
