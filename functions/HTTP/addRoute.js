@@ -40,5 +40,5 @@ export default function addRoute(routeConfig, handler) {
     if (! routes[pathname])
         routes[pathname] = {};
 
-    routes[pathname][method] = { handler, access, ...validator && { validator } };
+    routes[pathname][method] = { handler, access, validator };
 };

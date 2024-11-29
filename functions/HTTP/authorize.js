@@ -26,23 +26,20 @@ export default async function (req, access) {
         return;
     }
 
-    const token = req.headers.authorization.split('Bearer ')[1];
+    const tokenId = req.headers.authorization.split('Bearer ')[1];
     logger.debug('checking token presence');
 
-    if (! token)
+    if (! tokenId)
         throw new BadRequest('No authorization token');
 
-    logger.debug('verifying token', token);
-    const tokenPayload = await tasu.request(t.verifyToken, token) ;
+    logger.debug('🛂🔑 verifying token', tokenId);
+    const token = await AuthToken.verify(tokenId) ;
 
-    if (! tokenPayload)
+    if (! token)
         throw new BadRequest('Token verification failed');
 
     // extract principal ID
-    const { id, type } = tokenPayload;
-
-    if (! id)
-        throw new BadRequest('No principal ID in token payload');
+    const { userId } = token;
 
     // authorize
     const [ principalField, action, resource ] = access;

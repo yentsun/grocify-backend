@@ -23,6 +23,6 @@ export default function parse(body, contentType) {
             throw new httpErrors.BadRequest('Unexpected content type');
     }
 
-    logger.debug('parsed', JSON.stringify(result));
+    logger.debug('📜 parsed:', contentType);
     return result;
 };

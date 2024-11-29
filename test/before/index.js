@@ -1,5 +1,6 @@
 import sinon from 'sinon';
 import { boot } from '../../boot.js';
+import userFixtures from '../fixtures/users.json' assert { type: 'json' };
 
 
 export let fetchy;
@@ -50,10 +51,10 @@ export async function afterAll() {
 
 export async function loadFixtures() {
 
+    const { User, AuthToken } = kojo.functions;
 
+    const users = await Promise.all(userFixtures.map(User.create));
+    const tokens = await Promise.all(users.map(AuthToken.issue))
 
-    const [] = await Promise.all([
-
-    ]);
-
+    instances = { users, tokens }
 }

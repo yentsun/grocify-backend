@@ -4,8 +4,7 @@ import httpErrors from 'http-errors';
 
 export default async (kojo, logger) => {
 
-    const { HTTP, AuthToken } = kojo.functions;
-    const { prisma } = kojo.state;
+    const { HTTP, AuthToken, User } = kojo.functions;
 
     HTTP.addRoute({
         method: 'POST',
@@ -20,7 +19,7 @@ export default async (kojo, logger) => {
         const { email, password } = req.body;
 
         logger.debug('👤🔎 find user:', email);
-        const user = await prisma.User.findUnique({ where: { email }});
+        const user = await User.get({ email });
 
         if (! user)
             throw new httpErrors.NotFound('user not found');
@@ -30,9 +29,7 @@ export default async (kojo, logger) => {
             throw new httpErrors.Unauthorized();
 
         logger.debug('🔑 issue token for:', user.id);
-        const token = await AuthToken.issue(user.id);
-
-        kojo.state.alice = user;
+        const token = await AuthToken.issue(user);
 
         res.statusCode = 201;
         return { token: token.id, user };

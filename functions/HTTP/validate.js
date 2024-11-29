@@ -1,4 +1,5 @@
 import httpErrors from 'http-errors';
+import screenPassword from '../../lib/screenPassword.js';
 
 
 /**
@@ -18,7 +19,12 @@ export default function validate(req, validator) {
     if (Object.entries(req.query).length) payload.query = req.query;
     if (Object.entries(req.body).length) payload.body = req.body;
 
-    logger.debug('checking:', JSON.stringify(payload));
+    logger.debug('checking:', JSON.stringify({
+        ...payload,
+
+        ...payload.body &&
+        { body: screenPassword(payload.body, [ 'password', 'newPassword' ]) }
+    }));
     const valid = validator(payload);
 
     if (! valid) {

@@ -1,9 +1,10 @@
 import assert from 'assert';
-import { fetchy, beforeAll, afterAll } from './before/index.js';
+import { fetchy, beforeAll, afterAll, loadFixtures } from './before/index.js';
 
 
 before(async function () {
     await beforeAll();
+    await loadFixtures();
 });
 
 after(async function () {
