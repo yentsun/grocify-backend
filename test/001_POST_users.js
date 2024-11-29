@@ -1,6 +1,5 @@
 import assert from 'assert';
 import { fetchy } from './before/index.js';
-import users from './fixtures/users.json' assert { type: 'json' };
 
 
 describe('001 POST /users', () => {
