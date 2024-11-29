@@ -11,7 +11,7 @@ export default async function (req, permission) {
     assert(permission, `No permission defined`);
 
     if (! req.headers.authorization) {
-        logger.debug('🛂❌ no auth header');
+        logger.debug('no auth header');
         req.state.role = userRoles.anonymous;
     }
 

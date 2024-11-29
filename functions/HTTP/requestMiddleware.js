@@ -22,8 +22,8 @@ export default async function requestMiddleware(req, res) {
     const { method, url } = req;
 
     req.state = { id: trid.seq() };
-    logger.debug(`<<< [${req.state.id}] 🏁 ${method} ${url}`);
-    logger.debug('🧢 headers:', req.headers);
+    logger.debug(`<<< [${req.state.id}] 🟢 ${method} ${url}`);
+    logger.debug('🎭 headers:', req.headers);
     req.headers['content-type'] && logger.debug('content-type is', req.headers['content-type']);
     const start = process.hrtime();
 
@@ -50,7 +50,7 @@ export default async function requestMiddleware(req, res) {
     }); // TODO add content length limit!
 
     let responseBody = '';
-    let symbol = '>>>';
+    let symbol = '🏁';
 
     // general request handling
     try {
@@ -96,7 +96,7 @@ export default async function requestMiddleware(req, res) {
         const length = Buffer.byteLength(responseBody);
         res.setHeader('Content-Length', length);
 
-        logger.debug(`${symbol} [${req.state.id}] ${res.statusCode} / ${length} bytes / ${HRT2sec(process.hrtime(start))} sec \n${JSON.stringify(res.getHeaders(), null, 2)} \n-----------------------------\n${responseBody}\n-----------------------------`);
+        logger.debug(`>>> ${symbol} [${req.state.id}] ${res.statusCode} / ${length} bytes / ${HRT2sec(process.hrtime(start))} sec \n${JSON.stringify(res.getHeaders(), null, 2)} \n-----------------------------\n${responseBody}\n-----------------------------`);
         res.end(responseBody);
     }
 };
