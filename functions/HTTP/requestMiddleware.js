@@ -55,8 +55,7 @@ export default async function requestMiddleware(req, res) {
     // general request handling
     try {
         // extract endpoint config and parameters
-        const { resourceId, handler, permission, query, validator } = HTTP.router(method, url);
-        req.state.resourceId = resourceId;
+        const { handler, permission, query, validator } = HTTP.router(method, url);
         req.query = query;
 
         // parse JSON body

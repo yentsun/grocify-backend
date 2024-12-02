@@ -1,5 +1,6 @@
 generator client {
-    provider = "prisma-client-js"
+    provider        = "prisma-client-js"
+    previewFeatures = ["omitApi"]
 }
 
 datasource db {
@@ -13,7 +14,7 @@ model User {
     email        String    @unique @db.VarChar(100)
     passwordHash String    @db.Char(60)
     createdAt    DateTime  @default(now()) @db.Timestamptz(3)
-    updatedAt    DateTime? @default(now()) @db.Timestamptz(3)
+    updatedAt    DateTime? @db.Timestamptz(3)
     credits      Int?      @default(0)
 
     authTokens AuthToken[] // Relation to AuthToken
@@ -23,7 +24,7 @@ model AuthToken {
     id         String    @id @db.Char(15)
     userId     String    @db.Char(10)
     issuedAt   DateTime  @default(now()) @db.Timestamptz(3)
-    extendedAt DateTime? @default(now()) @db.Timestamptz(3)
+    extendedAt DateTime? @db.Timestamptz(3)
 
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 

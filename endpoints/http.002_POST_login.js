@@ -1,4 +1,3 @@
-import bcrypt from 'bcrypt';
 import httpErrors from 'http-errors';
 import { permissionNames } from '../dictionary/index.js';
 
@@ -19,20 +18,14 @@ export default async (kojo, logger) => {
 
         const { email, password } = req.body;
 
-        logger.debug('👤🔎 find user:', email);
-        const user = await User.get({ email });
-
-        if (! user)
-            throw new httpErrors.NotFound('user not found');
-
         logger.debug('🛂 verify password');
-        if (! await bcrypt.compare(password, user.passwordHash))
-            throw new httpErrors.Unauthorized();
+        if (! await User.checkPassword(email, password))
+            throw new httpErrors.Unauthorized('Bad user or password');
 
-        logger.debug('🔑 issue token for:', user.id);
-        const token = await AuthToken.issue(user);
+        logger.debug('🔑 issue token for:', email);
+        const token = await AuthToken.issue({ email });
 
         res.statusCode = 201;
-        return { token: token.id, user };
+        return { token, user: await User.get({ email }) };
     })
 };

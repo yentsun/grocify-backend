@@ -1,6 +1,3 @@
-import bcrypt from 'bcrypt';
-import httpErrors from 'http-errors';
-import { nanoid } from 'nanoid';
 import { permissionNames } from '../dictionary/index.js';
 
 
@@ -14,25 +11,11 @@ export default async (kojo, logger) => {
         pathname: '/self',
         permission: permissionNames.getSelf
 
-    }, async (req, res) => {
+    }, async (req) => {
 
-        const { email, password } = req.body;
+        const { requester } = req.state;
+        logger.debug('👤 return user:', requester.id, requester.email);
 
-        logger.debug('👤🔎 find user:', email);
-        const user = await prisma.User.findUnique({ where: { email }});
-
-        if (! user)
-            throw new httpErrors.NotFound('user not found');
-
-        logger.debug('🛂 verify password');
-        const ok = await bcrypt.compare(password, user.passwordHash);
-
-        if (! ok)
-            throw new httpErrors.Unauthorized();
-
-        logger.debug('🔑 issue token for:', user.id);
-        const token = await prisma.AuthToken.create({ data: { id: `T${nanoid(14)}`, userId: user.id }});
-        res.statusCode = 201;
-        return { token: token.id, user };
+        return { user: requester };
     })
 };

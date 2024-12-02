@@ -9,7 +9,7 @@ export default async function (data) {
     const [ kojo, logger ] = this;
     const { prisma } = kojo.state;
 
-    const user = await prisma.User.findUnique({ where: data });
+    const user = await prisma.User.findUnique({ where: data, omit: { passwordHash: true }});
 
     if (user)
             logger.info(user.id, user.email);

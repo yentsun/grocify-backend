@@ -7,7 +7,7 @@ import permissions from '../../permissions.js';
 export default async function (req, permission) {
 
     const [ kojo, logger ] = this;
-    const { AuthToken } = kojo.functions;
+    const { AuthToken, User } = kojo.functions;
     assert(permission, `No permission defined`);
 
     if (! req.headers.authorization) {
@@ -17,16 +17,19 @@ export default async function (req, permission) {
 
     if (req.headers.authorization) {
         const tokenId = req.headers.authorization.split('Bearer ')[1];
-        logger.debug('check token presence');
 
-        if (! tokenId)
+        if (! tokenId || tokenId.length !== 15)
             throw new httpErrors.BadRequest('No authorization token');
 
         logger.debug('🛂🔑 verifying token:', tokenId);
-        const token = await AuthToken.verify(tokenId) ;
+        const userId = await AuthToken.verify(tokenId) ;
 
-        if (! token)
+        if (! userId)
             throw new httpErrors.BadRequest('Token verification failed');
+
+        req.state.requesterId = userId;
+        req.state.requester = await User.get({ id: userId });
+        req.state.role = userRoles.registered;
     }
 
     logger.debug('🛂📃 check permission:', req.state.role, permission);

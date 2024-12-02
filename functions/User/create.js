@@ -20,7 +20,7 @@ export default async function (data) {
     const { prisma } = kojo.state;
     const { email, name, password } = data;
 
-    const id = `U${nanoid(9)}`;
+    const id = `${nanoid(9)}u`;
     const passwordHash = await bcrypt.hash(password, 12);
 
     try {

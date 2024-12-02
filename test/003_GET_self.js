@@ -13,6 +13,7 @@ describe('003 GET /self', () => {
         assert.strictEqual(res.status, 200);
         const json = await res.json();
         assert.strictEqual(json.user.name, userFixtures[0].name);
-        assert.strictEqual(json.token.length, 15);
+        assert.strictEqual(json.user.email, userFixtures[0].email);
+        assert.ok(json.user.id);
     });
 });
