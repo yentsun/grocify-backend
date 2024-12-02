@@ -58,7 +58,7 @@ export default async function requestMiddleware(req, res) {
         const { handler, permission, query, validator } = HTTP.router(method, url);
         req.query = query;
 
-        // parse JSON body
+        // parse body
         req.body = HTTP.parse(requestBody, req.headers['content-type']);
 
         // validate against the schema

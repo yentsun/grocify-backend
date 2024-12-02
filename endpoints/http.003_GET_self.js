@@ -4,7 +4,6 @@ import { permissionNames } from '../dictionary/index.js';
 export default async (kojo, logger) => {
 
     const { HTTP } = kojo.functions;
-    const { prisma } = kojo.state;
 
     HTTP.addRoute({
         method: 'GET',
@@ -17,5 +16,5 @@ export default async (kojo, logger) => {
         logger.debug('👤 return user:', requester.id, requester.email);
 
         return { user: requester };
-    })
+    });
 };
