@@ -3,7 +3,7 @@ import userFixtures from './fixtures/users.json' assert { type: 'json' };
 import { fetchy, instances } from './before/index.js';
 
 
-describe('003 GET /self', () => {
+describe('030 GET /self', () => {
 
     it('returns logged-in user normally', async() => {
 
