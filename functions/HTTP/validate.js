@@ -22,11 +22,11 @@ export default function validate(req, validator) {
 
     console.log(validator.schema, payload)
 
-    logger.debug('⚗️:', JSON.stringify({
+    logger.debug('⚗️', JSON.stringify({
         ...payload,
 
-        ...payload.body &&
-        { body: screenPassword(payload.body, [ 'password', 'newPassword' ]) }
+        ...payload.body && {
+        body: screenPassword(payload.body, [ 'password', 'newPassword' ]) }
     }));
     const valid = validator(payload);
 
@@ -36,8 +36,6 @@ export default function validate(req, validator) {
         logger.debug('failed:', JSON.stringify(error.message));
         const { keyword, params } = error;
         let message;
-
-        console.log(error)
 
         if (keyword === 'required') {
             message = `Missing '${error.params.missingProperty}'`;
