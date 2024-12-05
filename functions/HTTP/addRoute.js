@@ -2,32 +2,38 @@ import AJV from 'ajv';
 
 
 /**
- * Add a route with the specified configuration and handler to the application's routes.
+ * Adds a new route with the specified pattern, route configuration, and handler function.
  *
- * @param {Object} routeConfig - Configuration object for the new route.
- * @param {string} routeConfig.method - HTTP method for the route (e.g., GET, POST).
- * @param {string} routeConfig.pathname - URI path for the route.
- * @param {string} routeConfig.permission - Permission required to access the route.
- * @param {Object} routeConfig.schema - Schema object defining the expected request data structure.
- * @param {Object} handler - Function to handle the request for the route.
+ * @param {string} pattern - The pattern for the route in the format 'METHOD /pathname'.
+ * @param {Object} routeConfig - The configuration object for the route containing permission and schema information.
+ * @param {Function} handler - The handler function to be executed when the route is accessed.
  *
  * @return {void}
  */
-export default function addRoute(routeConfig, handler) {
+export default function addRoute(pattern, routeConfig, handler) {
 
     const [ kojo, logger ] = this;
-    logger.debug(routeConfig);
-    const { method, pathname, permission, schema } = routeConfig;
+    logger.debug(pattern, routeConfig);
+    const { permission, schema } = routeConfig;
+    const [ method, pathnamePattern ] = pattern.split(' ');
+
     let validator;
 
     if (schema) {
-        const { query, body } = schema;
+        const { query, body, key } = schema;
         const combinedSchema = {
             title: 'Incoming data combined',
             type: 'object',
             properties: {
-                ...query && { query },
-                ...body && { body }
+
+                ...key && {
+                key },
+
+                ...query && {
+                query },
+
+                ...body && {
+                body }
             },
             additionalProperties: false,
             minProperties: [ query, body ].filter(p => p && (p.required || p.minItems)).length
@@ -37,8 +43,8 @@ export default function addRoute(routeConfig, handler) {
 
     const { routes } = kojo.state;
 
-    if (! routes[pathname])
-        routes[pathname] = {};
+    if (! routes[pathnamePattern])
+        routes[pathnamePattern] = {};
 
-    routes[pathname][method] = { handler, permission, validator };
+    routes[pathnamePattern][method] = { handler, permission, validator };
 };

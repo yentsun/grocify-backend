@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { fetchy } from './before/index.js';
+import { fetchy, state } from './before/index.js';
 import userFixtures from './fixtures/users.json' assert { type: 'json' };
 
 
@@ -18,5 +18,6 @@ describe('020 POST /login', () => {
         const json = await res.json();
         assert.strictEqual(json.user.name, name);
         assert.strictEqual(json.token.length, 15);
+        state.aliceToken = json.token;  // for future removal tests
     });
 });

@@ -1,19 +1,14 @@
 import assert from 'assert';
-import userFixtures from './fixtures/users.json' assert { type: 'json' };
-import { fetchy, instances } from './before/index.js';
+import { fetchy, state, kojo } from './before/index.js';
 
 
-describe('021 DELETE /login', () => {
+describe('021 DELETE /login/:token', () => {
 
-    it('returns logged-in user normally', async() => {
+    it('deletes an auth token', async() => {
 
-        const res = await fetchy('/self', {
-            headers: { 'Authorization': `Bearer ${instances.tokens[0]}` }});
+        const res = await fetchy(`/login/${state.aliceToken}`, { method: 'DELETE' });
 
-        assert.strictEqual(res.status, 200);
-        const json = await res.json();
-        assert.strictEqual(json.user.name, userFixtures[0].name);
-        assert.strictEqual(json.user.email, userFixtures[0].email);
-        assert.ok(json.user.id);
+        assert.strictEqual(res.status, 204);
+        assert.ok(! await kojo.functions.AuthToken.get(state.aliceToken));
     });
 });

@@ -6,14 +6,13 @@ export default async (kojo, logger) => {
 
     const { HTTP, AuthToken, User } = kojo.functions;
 
-    HTTP.addRoute({
-        method: 'POST',
-        pathname: '/login',
+    HTTP.addRoute('POST /login', {
         permission: permissionNames.login,
-        schema: { body: {
-            email: { type: 'string', format: 'email' },
-            password: { type: 'string', minLength: 6 }}}
-
+        schema: {
+            body: {
+                email: { type: 'string', format: 'email' },
+                password: { type: 'string', minLength: 6 }}
+        }
     }, async (req, res) => {
 
         const { email, password } = req.body;

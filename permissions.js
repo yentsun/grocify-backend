@@ -17,4 +17,5 @@ export default {
 function isRegistered(req) {
     if (! Boolean(req.state.requester))
         throw new ExpectedError('Not registered', errorCodes.notRegistered);
+    return true;
 }

@@ -7,6 +7,7 @@ export let fetchy;
 export let kojo;
 export let baseURL;
 export let instances;
+export const state = {};
 
 const commonHeaders = {
     'x-platform': 'linux',
@@ -56,5 +57,5 @@ export async function loadFixtures() {
     const users = await Promise.all(userFixtures.map(User.create));
     const tokens = await Promise.all(users.map(AuthToken.issue))
 
-    instances = { users, tokens }
+    instances = { users, tokens };
 }

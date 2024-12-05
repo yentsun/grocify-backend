@@ -6,9 +6,7 @@ export default async (kojo, logger) => {
 
     const { HTTP, User } = kojo.functions;
 
-    HTTP.addRoute({
-        method: 'POST',
-        pathname: '/users',
+    HTTP.addRoute('POST /users', {
         permission: permissionNames.registerSelf,
         schema: { body: {
             name: { type: 'string', minLength: 3, maxLength: 50 },

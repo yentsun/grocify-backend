@@ -16,8 +16,9 @@ export default function validate(req, validator) {
     // validate incoming data combined
     const payload = {};
 
+    if (req.key) payload.key = req.key;
     if (Object.entries(req.query).length) payload.query = req.query;
-    if (Object.entries(req.body).length) payload.body = req.body;
+    if (req.body && Object.entries(req.body).length) payload.body = req.body;
 
     logger.debug('checking:', JSON.stringify({
         ...payload,

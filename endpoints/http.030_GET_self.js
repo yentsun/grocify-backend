@@ -5,9 +5,8 @@ export default async (kojo, logger) => {
 
     const { HTTP } = kojo.functions;
 
-    HTTP.addRoute({
-        method: 'GET',
-        pathname: '/self',
+    HTTP.addRoute('GET /self', {
+
         permission: permissionNames.getSelf
 
     }, async (req) => {

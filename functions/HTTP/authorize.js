@@ -4,11 +4,11 @@ import { userRoles } from '../../dictionary/index.js';
 import permissions from '../../permissions.js';
 
 
-export default async function (req, permission) {
+export default async function (req, permissionName) {
 
     const [ kojo, logger ] = this;
     const { AuthToken, User } = kojo.functions;
-    assert(permission, `No permission defined`);
+    assert(permissionName, `No permission defined`);
 
     if (! req.headers.authorization) {
         logger.debug('no auth header');
@@ -32,21 +32,23 @@ export default async function (req, permission) {
         req.state.role = userRoles.registered;
     }
 
-    logger.debug('🛂📃 check permission:', req.state.role, permission);
-    const checks = permissions[req.state.role][permission];
-
-    if (! checks?.length) {
-        logger.debug('💨 no checks, OK');
-        return;
-    }
+    logger.debug('🛂📃 check permission:', req.state.role, permissionName);
 
     try {
-        logger.debug('🛂🔎 perform checks', checks.length);
-        assert(checks.every(check => Boolean(check(req))));
+        console.log(permissions[req.state.role], permissionName)
+        const permissionRecord = permissions[req.state.role].find(([ name ]) => name === permissionName);
+        assert(permissionRecord, 'Unknown permission');
+        const [ , checks ] = permissionRecord;
+
+        if (! checks) {
+            logger.debug('💨 no extra checks, OK');
+            return;
+        }
+
+        logger.debug('🛂🔎 perform extra checks:', checks.map(c => c.name));
+        assert(checks.every(check => Boolean(check(req))), 'Not every check is OK');
         logger.debug('🛂✔ OK');
     } catch (error) {
         throw new httpErrors.Forbidden(error.message);
     }
-
-
 };

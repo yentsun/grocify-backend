@@ -19,8 +19,8 @@ export default async function requestMiddleware(req, res) {
     const [ kojo, logger ] = this;
     const { trid } = kojo.state;
     const { HTTP } = kojo.functions;
-    const { method, url } = req;
 
+    const { method, url } = req;
     req.state = { id: trid.seq() };
     logger.debug(`<<< [${req.state.id}] 🟢 ${method} ${url}`);
     logger.debug('🎭 headers:', req.headers);
@@ -55,8 +55,9 @@ export default async function requestMiddleware(req, res) {
     // general request handling
     try {
         // extract endpoint config and parameters
-        const { handler, permission, query, validator } = HTTP.router(method, url);
+        const { handler, permission, query, key, validator } = HTTP.router(method, url);
         req.query = query;
+        req.key = key;
 
         // parse body
         req.body = HTTP.parse(requestBody, req.headers['content-type']);
