@@ -5,7 +5,7 @@ import ExpectedError from './lib/ExpectedError.js';
 export default {
     [userRoles.anonymous]: [
         [ perm.healthCheck ],
-        [ perm.login ],
+        [ perm.login ], [perm.logout],
         [ perm.registerSelf ]
     ],
 

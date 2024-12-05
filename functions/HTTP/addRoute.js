@@ -13,12 +13,16 @@ import AJV from 'ajv';
 export default function addRoute(pattern, routeConfig, handler) {
 
     const [ kojo, logger ] = this;
+    const { ajv } = kojo.state;
+
     logger.debug(pattern, routeConfig);
     const { permission, schema } = routeConfig;
     const [ method, pathnamePattern ] = pattern.split(' ');
 
     let validator;
 
+    // This initially belongs to HTTP.validate, but since we can save time with pre-compiled validator
+    // we are doing it in route configuration
     if (schema) {
         const { query, body, key } = schema;
         const combinedSchema = {
@@ -36,9 +40,9 @@ export default function addRoute(pattern, routeConfig, handler) {
                 body }
             },
             additionalProperties: false,
-            minProperties: [ query, body ].filter(p => p && (p.required || p.minItems)).length
+            minProperties: [ query, body, key ].filter(p => p && (p.required || p.minItems)).length
         };
-        validator = (new AJV({ verbose: true, coerceTypes: true, $data: true, strict: false })).compile(combinedSchema);
+        validator = ajv.compile(combinedSchema);
     }
 
     const { routes } = kojo.state;

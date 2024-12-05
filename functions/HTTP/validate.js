@@ -20,7 +20,9 @@ export default function validate(req, validator) {
     if (Object.entries(req.query).length) payload.query = req.query;
     if (req.body && Object.entries(req.body).length) payload.body = req.body;
 
-    logger.debug('checking:', JSON.stringify({
+    console.log(validator.schema, payload)
+
+    logger.debug('⚗️:', JSON.stringify({
         ...payload,
 
         ...payload.body &&
@@ -35,6 +37,8 @@ export default function validate(req, validator) {
         const { keyword, params } = error;
         let message;
 
+        console.log(error)
+
         if (keyword === 'required') {
             message = `Missing '${error.params.missingProperty}'`;
         } else if (keyword === 'minProperties') {
@@ -46,7 +50,7 @@ export default function validate(req, validator) {
         } else if (keyword === 'additionalProperties') {
             message = `'${params.additionalProperty}' should not be in payload`
         } else if (keyword === 'format')  {
-            message = `Wrong format for '${error.dataPath.split('.').pop()}'`
+            message = `Wrong format for '${error.schema}'`
         } else if (keyword === 'pattern')  {
             message = `Requirements not met for '${error.dataPath.split('.').pop()}'`
         } else {

@@ -8,11 +8,18 @@ export default async (kojo, logger) => {
 
     HTTP.addRoute('POST /users', {
         permission: permissionNames.registerSelf,
-        schema: { body: {
-            name: { type: 'string', minLength: 3, maxLength: 50 },
-            email: { type: 'string', format: 'email' },
-            password: { type: 'string', minLength: 6 }}}
-
+        schema: {
+            body: {
+                type: 'object',
+                properties: {
+                    name: { type: 'string', minLength: 3, maxLength: 50 },
+                    email: { type: 'string', format: 'email', sanitize: email => email.toLowerCase() },
+                    password: { type: 'string', minLength: 6 }
+                },
+                required: [ 'name', 'email', 'password' ],
+                additionalProperties: false
+            }
+        }
     }, async (req, res) => {
 
         try {

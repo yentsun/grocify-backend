@@ -35,7 +35,6 @@ export default async function (req, permissionName) {
     logger.debug('🛂📃 check permission:', req.state.role, permissionName);
 
     try {
-        console.log(permissions[req.state.role], permissionName)
         const permissionRecord = permissions[req.state.role].find(([ name ]) => name === permissionName);
         assert(permissionRecord, 'Unknown permission');
         const [ , checks ] = permissionRecord;

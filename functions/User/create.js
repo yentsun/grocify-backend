@@ -31,6 +31,6 @@ export default async function (data) {
         logger.error(error.message);
 
         if (error.code === 'P2002')
-            throw new ExpectedError('user already registered', errorCodes.duplicate);
+            throw new ExpectedError('User already registered', errorCodes.duplicate);
     }
 }

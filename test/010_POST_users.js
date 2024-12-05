@@ -10,12 +10,14 @@ describe('010 POST /users', () => {
             headers: { 'content-type': 'application/json' },
             method: 'POST',
             body: JSON.stringify({
-                email: 'edwdNorthrp@huemail.net',
+                email: 'edwdNorthrp@HUEmail.net',
                 name: 'Edward Northrop',
                 password: 'ヒUrwUグuヹK8' }) });
 
         assert.strictEqual(res.status, 201);
-        assert.strictEqual((await res.json()).newUser.name, 'Edward Northrop');
+        const json = await res.json();
+        assert.strictEqual(json.newUser.name, 'Edward Northrop');
+        assert.strictEqual(json.newUser.email, 'edwdnorthrp@huemail.net');
     });
 
     it('rejects payload with existing email', async () => {
@@ -29,4 +31,17 @@ describe('010 POST /users', () => {
 
         assert.strictEqual(res.status, 409);
     });
+
+    it('rejects if invalid email', async () => {
+        const res = await fetchy('/users', {
+            headers: { 'content-type': 'application/json' },
+            method: 'POST',
+            body: JSON.stringify({
+                email: 'edwdNorthrphuemail.net',
+                name: ' No',
+                password: 'ォ680Yツヴzヱ' }) });
+
+        assert.strictEqual(res.status, 400);
+    });
+
 });

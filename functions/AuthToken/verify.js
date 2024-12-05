@@ -9,7 +9,7 @@ export default async function (tokenId) {
     const { prisma } = kojo.state;
 
     const token = await prisma.AuthToken.findUnique({ where: { id: tokenId }});
-    logger.info(token);
+    logger.debug({ token });
 
     return token?.userId;
 }
