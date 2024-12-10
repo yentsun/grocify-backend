@@ -16,7 +16,6 @@ describe('021 DELETE /login/:token', () => {
 
         const res = await fetchy(`/login/978Kfg`, { method: 'DELETE' });
 
-        assert.strictEqual(res.status, 204);
-        assert.ok(! await kojo.functions.AuthToken.verify(state.aliceToken));
+        assert.strictEqual(res.status, 400);
     });
 });

@@ -9,7 +9,11 @@ export default async (kojo, logger) => {
     HTTP.addRoute('DELETE /login/:key', {
         permission: permissionNames.logout,
         schema: {
-            key: { type: 'string', length: 14 }
+            key: {
+                type: 'string',
+                minLength: 15,
+                maxLength: 15
+            }
         }
     }, async (req, res) => {
 

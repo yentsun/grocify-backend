@@ -20,11 +20,19 @@ export default function addRoute(pattern, routeConfig, handler) {
     const [ method, pathnamePattern ] = pattern.split(' ');
 
     let validator;
+    const required = [];
 
-    // This initially belongs to HTTP.validate, but since we can save time with pre-compiled validator
+    if ([ 'POST', 'PUT' ].includes(method))
+        required.push('body');
+
+    // This belongs to HTTP.validate, but since we can benefit from pre-compiled validator
     // we are doing it in route configuration
     if (schema) {
         const { query, body, key } = schema;
+
+        if (key)
+            required.push('key');
+
         const combinedSchema = {
             title: 'Incoming data combined',
             type: 'object',
@@ -40,6 +48,7 @@ export default function addRoute(pattern, routeConfig, handler) {
                 body }
             },
             additionalProperties: false,
+            required,
             minProperties: [ query, body, key ].filter(p => p && (p.required || p.minItems)).length
         };
         validator = ajv.compile(combinedSchema);
