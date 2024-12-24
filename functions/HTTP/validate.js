@@ -19,9 +19,7 @@ export default function validate(req, validator) {
 
     if (req.key) payload.key = req.key;
     if (Object.entries(req.query).length) payload.query = req.query;
-    if (req.body && Object.entries(req.body).length) payload.body = req.body;
-
-    console.log(validator.schema, payload)
+    if (req.parsed && Object.entries(req.parsed).length) payload.body = req.parsed;
 
     logger.debug('⚗️', JSON.stringify({
         ...payload,

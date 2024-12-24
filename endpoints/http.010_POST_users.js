@@ -23,7 +23,7 @@ export default async (kojo, logger) => {
     }, async (req, res) => {
 
         try {
-            const newUser = await User.create(req.body);
+            const newUser = await User.create(req.parsed);
             logger.info('👤🔰 new user:', newUser);
             res.statusCode = 201;
             return { newUser };

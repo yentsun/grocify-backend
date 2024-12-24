@@ -3,5 +3,6 @@ export default {
     login: 'login',
     logout: 'logout',
     registerSelf: 'registerSelf',
-    getSelf: 'getSelf'
+    getSelf: 'getSelf',
+    postReceipt: 'postReceipt'
 }

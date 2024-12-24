@@ -1,4 +1,3 @@
-import httpErrors from 'http-errors';
 import { permissionNames } from '../dictionary/index.js';
 
 

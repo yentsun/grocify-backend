@@ -10,9 +10,7 @@ export let instances;
 export const state = {};
 
 const commonHeaders = {
-    'x-platform': 'linux',
-    'x-app-version': '0.0.0',
-    'connection': 'keep-alive'
+    // 'connection': 'keep-alive'
 }
 
 export async function beforeAll() {

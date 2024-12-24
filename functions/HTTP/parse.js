@@ -9,6 +9,8 @@ export default function parse(body, contentType) {
     if (! body) return;
 
     let result;
+    logger.debug('🔪 content type:', contentType);
+
     switch (contentType) {
 
         case 'application/json':
@@ -23,6 +25,5 @@ export default function parse(body, contentType) {
             throw new httpErrors.BadRequest('Unexpected content type');
     }
 
-    logger.debug('📜 parsed:', contentType);
     return result;
 };

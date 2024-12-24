@@ -15,7 +15,7 @@ export default async (kojo, logger) => {
         }
     }, async (req, res) => {
 
-        const { email, password } = req.body;
+        const { email, password } = req.parsed;
 
         logger.debug('🛂 verify password');
         if (! await User.checkPassword(email, password))

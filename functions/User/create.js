@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { nanoid } from 'nanoid';
-import { errorCodes } from '../../dictionary/index.js';
+import { errorCodes, suffixes } from '../../dictionary/index.js';
 import ExpectedError from '../../lib/ExpectedError.js';
 
 
@@ -20,7 +20,7 @@ export default async function (data) {
     const { prisma } = kojo.state;
     const { email, name, password } = data;
 
-    const id = `${nanoid(9)}u`;
+    const id = `${nanoid(9)}${name.slice(0, 2)}${suffixes.user}`;
     const passwordHash = await bcrypt.hash(password, 12);
 
     try {

@@ -24,7 +24,7 @@ export default async function requestMiddleware(req, res) {
     req.state = { id: trid.seq() };
     logger.debug(`<<< [${req.state.id}] 🟢 ${method} ${url}`);
     logger.debug('🎭 headers:', req.headers);
-    req.headers['content-type'] && logger.debug('content-type is', req.headers['content-type']);
+    const contentType = req.headers['content-type'];
     const start = process.hrtime();
 
     // set general headers
@@ -32,22 +32,29 @@ export default async function requestMiddleware(req, res) {
 
     // capture body
     const decoder = new StringDecoder('utf-8');
-    let buffer = '';
-    req.on('data', (data) => {
-        buffer += decoder.write(data);
 
-        // Check Content-Length and end connection if over limit
-        if(buffer.length > MAX_CONTENT_LENGTH){
-            req.connection.destroy();
-            logger.error(`⚠ request content length exceeded limit of ${MAX_CONTENT_LENGTH} bytes`);
-        }
-    });
-    const requestBody = await new Promise(resolve => {
-        req.on('end', () => {
-            buffer += decoder.end();
-            resolve(buffer);
+    if (! typesToSkipParsing.includes(contentType)) {
+        let buffer = '';
+
+        logger.debug('🥒🥔🌶 buffer data for parsing');
+        req.on('data', (data) => {
+            buffer += decoder.write(data);
+
+            // Check Content-Length and end connection if over limit
+            if (buffer.length > MAX_CONTENT_LENGTH){
+                req.connection.destroy();
+                logger.error(`⚠ request content length exceeded limit of ${MAX_CONTENT_LENGTH} bytes`);
+            }
         });
-    }); // TODO add content length limit!
+        const requestBody = await new Promise(resolve => {
+            req.on('end', () => {
+                buffer += decoder.end();
+                resolve(buffer);
+            });
+        });
+
+        req.parsed = HTTP.parse(requestBody, contentType);
+    }
 
     let responseBody = '';
     let symbol = '🏁';
@@ -58,9 +65,6 @@ export default async function requestMiddleware(req, res) {
         const { handler, permission, query, key, validator } = HTTP.router(method, url);
         req.query = query;
         req.key = key;
-
-        // parse body
-        req.body = HTTP.parse(requestBody, req.headers['content-type']);
 
         // validate against the schema
         if (validator)
@@ -100,3 +104,5 @@ export default async function requestMiddleware(req, res) {
         res.end(responseBody);
     }
 };
+
+const typesToSkipParsing = [ 'image/jpeg' ];

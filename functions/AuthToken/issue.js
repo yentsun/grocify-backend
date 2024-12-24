@@ -1,4 +1,5 @@
 import { nanoid } from 'nanoid';
+import { suffixes } from '../../dictionary/index.js';
 
 
 export default async function ({ id, email }) {
@@ -14,7 +15,7 @@ export default async function ({ id, email }) {
         userId = (await User.get({ email })).id;
     }
 
-    const token = await prisma.AuthToken.create({ data: { id: `${nanoid(14)}t`, userId }});
+    const token = await prisma.AuthToken.create({ data: { id: `${nanoid(14)}${suffixes.token}`, userId }});
     logger.info(token);
 
     return token.id;

@@ -10,11 +10,12 @@ export default {
     ],
 
     [userRoles.registered]: [
-        [ perm.getSelf, [ isRegistered ]]
+        [ perm.getSelf, [ isOk ]],
+        [ perm.postReceipt, [ isOk ] ]
     ]
 }
 
-function isRegistered(req) {
+function isOk(req) {
     if (! Boolean(req.state.requester))
         throw new ExpectedError('Not registered', errorCodes.notRegistered);
     return true;
