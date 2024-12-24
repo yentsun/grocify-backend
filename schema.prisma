@@ -9,7 +9,7 @@ datasource db {
 }
 
 model User {
-    id           String    @id @db.Char(10)
+    id           String    @id @db.Char(12)
     name         String    @db.VarChar(50)
     email        String    @unique @db.VarChar(100)
     passwordHash String    @db.Char(60)
@@ -22,7 +22,7 @@ model User {
 
 model AuthToken {
     id         String    @id @db.Char(15)
-    userId     String    @db.Char(10)
+    userId     String    @db.Char(12)
     issuedAt   DateTime  @default(now()) @db.Timestamptz(3)
     extendedAt DateTime? @db.Timestamptz(3)
 
