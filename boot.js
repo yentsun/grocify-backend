@@ -1,4 +1,5 @@
 import * as path from 'node:path';
+import OpenAI from 'openai';
 import configLoader from 'yt-config';
 import AJV from 'ajv';
 import ajvSanitizer from 'ajv-sanitizer';
@@ -11,10 +12,10 @@ import { PrismaClient } from '@prisma/client'
 
 export async function boot() {
 
-    console.log('> load config');
+    console.log('> config');
     const config = await configLoader(path.join(process.cwd(), 'config.ini'));
 
-    console.log('> init Kojo');
+    console.log('> Kojo');
     const kojo = new Kojo(config.kojo);
     kojo.set('config', config);
     kojo.set('routes', {});
@@ -25,11 +26,14 @@ export async function boot() {
     addFormats(ajv);
     kojo.set('ajv', ajvSanitizer(ajv));
 
-    console.log('> init Prisma')
+    console.log('> Prisma')
     kojo.set('prisma', new PrismaClient());
 
-    console.log('> init Trid');
+    console.log('> Trid');
     kojo.set('trid', new TRID({ prefix: kojo.id, length: 4 }));
+
+    console.log('> OpenAI');
+    kojo.set('openAi', new OpenAI());
 
     console.log('> wait for ready');
     await kojo.ready();

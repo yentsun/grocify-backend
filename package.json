@@ -26,11 +26,13 @@
     "ajv-formats": "^3.0.1",
     "ajv-keywords": "^5.1.0",
     "ajv-sanitizer": "^1.2.1",
+    "base64-stream": "^1.0.0",
     "bcrypt": "^5.1.1",
     "http-errors": "^2.0.0",
     "kojo": "^8.2.1",
     "mime-types": "^2.1.35",
     "nanoid": "^5.0.8",
+    "openai": "^4.77.0",
     "trid": "^0.1.2",
     "yt-config": "^4.0.4"
   },
