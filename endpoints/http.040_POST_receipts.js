@@ -9,10 +9,10 @@ import { Base64Encode } from 'base64-stream';
 import { PassThrough, pipeline } from 'stream';
 
 
-export default async (kojo, logger) => {
+export default async (app, logger) => {
 
-    const { HTTP, AuthToken, User } = kojo.functions;
-    const { openAi } = kojo.state;
+    const { HTTP, AuthToken, User } = app.functions;
+    const { openAi } = app.state;
 
     HTTP.addRoute('POST /receipts', {
         permission: permissionNames.postReceipt,
@@ -32,30 +32,28 @@ export default async (kojo, logger) => {
         pipeline(
             incoming,
             new Base64Encode(),
-            process.stdout,
-            () => {
-                logger.debug('pipeline finished');
-        });
+            () => logger.debug('pipeline finished')
+        );
 
-        // try {
-        //
-        //     const chatGptResponse = await openAi.chat.completions.create({
-        //         model: 'gpt-4o-mini',
-        //         messages: [{
-        //             role: 'user',
-        //             content: [
-        //                 { type: 'text', text: 'analyze' },
-        //                 { type: 'image_url', image_url: { url: await new Response(outgoing).blob() } }
-        //             ]
-        //         }],
-        //     });
-        //
-        //     const json = await chatGptResponse.json();
-        //     logger.debug(json)
-        //
-        // } catch (error) {
-        //     logger.error(error.message)
-        //
-        // }
+        try {
+
+            const chatGptResponse = await openAi.chat.completions.create({
+                model: 'gpt-4o-mini',
+                messages: [{
+                    role: 'user',
+                    content: [
+                        { type: 'text', text: 'analyze' },
+                        { type: 'image_url', image_url: { url: await new Response(outgoing).blob() } }
+                    ]
+                }],
+            });
+
+            const json = await chatGptResponse.json();
+            logger.debug(json)
+
+        } catch (error) {
+            logger.error(error.message)
+
+        }
     })
 };

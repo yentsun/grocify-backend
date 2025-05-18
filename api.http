@@ -1,0 +1,19 @@
+### 000 Status check
+GET {{baseUrl}}/health
+
+
+### 020 Login
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "password": "{{password}}"
+}
+
+
+### 040 Post new receipts
+POST {{baseUrl}}/receipts
+Authorization: Bearer {{token}}
+Content-Type: image/jpeg
+
