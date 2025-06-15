@@ -16,6 +16,7 @@ describe('010 POST /users', () => {
 
         assert.strictEqual(res.status, 201);
         const json = await res.json();
+        assert.strictEqual(json.newUser.passwordHash, undefined);
         assert.strictEqual(json.newUser.name, 'Edward Northrop');
         assert.strictEqual(json.newUser.email, 'edwdnorthrp@huemail.net');
     });

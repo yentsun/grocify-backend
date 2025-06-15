@@ -2,6 +2,16 @@
 GET {{baseUrl}}/health
 
 
+### 010 Register new user
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+    "name": "John Doe",
+    "email": "{{email}}",
+    "password": "{{password}}"
+}
+
 ### 020 Login
 POST {{baseUrl}}/login
 Content-Type: application/json
@@ -17,3 +27,4 @@ POST {{baseUrl}}/receipts
 Authorization: Bearer {{token}}
 Content-Type: image/jpeg
 
+< .attachments/IMG_20241213_180745441.jpg

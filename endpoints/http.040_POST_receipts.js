@@ -19,9 +19,9 @@ export default async (app, logger) => {
     }, async (req, res) => {
 
         const incoming = req;
-        incoming.on('data', (data) => {
-            logger.debug('🔣', data.length);
-        });
+        // incoming.on('data', (data) => {
+        //     logger.debug('🔣', data.length);
+        // });
         const id = `${nanoid(12)}${suffixes.receipt}`;
         const ext = mime.extension(req.headers['content-type']);
         // const storagePath = path.join(os.tmpdir(), path.basename(`grocify_${id}.${ext}`));
@@ -29,27 +29,38 @@ export default async (app, logger) => {
         // incoming.pipe(fs.createWriteStream(storagePath));
 
         const outgoing = new PassThrough();
-        pipeline(
+        const chunks = [];
+        outgoing.on('data', chunk => chunks.push(chunk));
+
+        await new Promise(resolve => pipeline(
             incoming,
-            new Base64Encode(),
-            () => logger.debug('pipeline finished')
-        );
+            new Base64Encode({ prefix:`data:${req.headers['content-type']};base64,` }),
+            outgoing,
+            (error) => {
+                logger.debug('pipeline finished', error?.message);
+                resolve();
+            }
+        ));
+
+        const base64Data = Buffer.concat(chunks).toString();
 
         try {
-
+            logger.debug('send request to chatGPT: analyze image');
             const chatGptResponse = await openAi.chat.completions.create({
+                response_format: { type: 'json_object' },
                 model: 'gpt-4o-mini',
                 messages: [{
                     role: 'user',
                     content: [
-                        { type: 'text', text: 'analyze' },
-                        { type: 'image_url', image_url: { url: await new Response(outgoing).blob() } }
+                        { type: 'text', text: 'analyze this receipt and return the following information:' +
+                                              'json object with shop name and location and array of data objects ' +
+                                              'with category, name and price' },
+                        { type: 'image_url', image_url: { url: base64Data }}
                     ]
                 }],
             });
 
-            const json = await chatGptResponse.json();
-            logger.debug(json)
+            logger.debug(JSON.parse(chatGptResponse.choices[0].message.content));
 
         } catch (error) {
             logger.error(error.message)
