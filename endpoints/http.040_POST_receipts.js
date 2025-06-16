@@ -48,13 +48,14 @@ export default async (app, logger) => {
             logger.debug('send request to chatGPT: analyze image');
             const chatGptResponse = await openAi.chat.completions.create({
                 response_format: { type: 'json_object' },
-                model: 'gpt-4o-mini',
+                model: 'o4-mini-2025-04-16',
                 messages: [{
                     role: 'user',
                     content: [
-                        { type: 'text', text: 'analyze this receipt and return the following information:' +
-                                              'json object with shop name and location and array of data objects ' +
-                                              'with category, name and price' },
+                        { type: 'text', text: 'Analyze this receipt and return the following information:' +
+                                              'json object with shop name, location and country and array of data objects ' +
+                                              'with category, sub-category, name, translated name and price. Do not transform the ' +
+                                              'price values to numbers.' },
                         { type: 'image_url', image_url: { url: base64Data }}
                     ]
                 }],
