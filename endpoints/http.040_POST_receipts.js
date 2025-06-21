@@ -60,7 +60,10 @@ export default async (app, logger) => {
                 }],
             });
 
-            logger.debug(JSON.parse(chatGptResponse.choices[0].message.content));
+            const data = JSON.parse(chatGptResponse.choices[0].message.content);
+            logger.debug(data);
+            res.statusCode = 200;
+            return { data };
 
         } catch (error) {
             logger.error(error.message)
