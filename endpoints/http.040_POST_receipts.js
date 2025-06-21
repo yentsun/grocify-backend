@@ -1,7 +1,6 @@
 import httpErrors from 'http-errors';
 import { nanoid } from 'nanoid';
 import path from 'path';
-import fs from 'fs';
 import mime from 'mime-types';
 import os from 'os';
 import { permissionNames, suffixes } from '../dictionary/index.js';
