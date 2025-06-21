@@ -32,5 +32,7 @@ export default async function (data) {
 
         if (error.code === 'P2002')
             throw new ExpectedError(`User already registered: ${email}`, errorCodes.duplicate);
+
+        throw error;
     }
 }
