@@ -33,6 +33,8 @@ export default async (kojo, logger) => {
 
             if (error.code === errorCodes.duplicate)
                 throw new httpErrors.Conflict(error.message);
+
+            throw error;
         }
     })
 };
