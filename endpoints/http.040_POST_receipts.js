@@ -53,7 +53,7 @@ export default async (app, logger) => {
                     content: [
                         { type: 'text', text: 'Analyze this receipt and return the following information:' +
                                               'json object with receipt id, shop name, location and country and array of data objects ' +
-                                              'with category, sub-category, name, translated name, item count, price as amount and currency.' },
+                                              'with category, sub-category, name, translated name, unit count, price as amount and currency.' },
                         { type: 'image_url', image_url: { url: base64Data }}
                     ]
                 }],

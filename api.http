@@ -27,4 +27,4 @@ POST {{baseUrl}}/receipts
 Authorization: Bearer {{token}}
 Content-Type: image/jpeg
 
-< .attachments/IMG_20250616_072750526.jpg
+< .attachments/IMG_20250618_081329734.jpg
