@@ -28,11 +28,12 @@ export default async function (data) {
         return await prisma.User.create({ data: { id, email, name, passwordHash }});
 
     } catch (error) {
-        logger.error(error.message);
+        logger.error(error);
 
         if (error.code === 'P2002')
             throw new ExpectedError(`User already registered: ${email}`, errorCodes.duplicate);
 
+        logger.debug('re-throw error with code:', error.code);
         throw error;
     }
 }
