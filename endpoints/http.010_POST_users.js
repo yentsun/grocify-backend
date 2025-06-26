@@ -26,7 +26,7 @@ export default async (kojo, logger) => {
             const newUser = await User.create(req.parsed);
             logger.info('👤🔰 new user:', newUser);
             res.statusCode = 201;
-            return { newUser };
+            return { newUser: User.shape(newUser) };
 
         } catch (error) {
             logger.error(error);

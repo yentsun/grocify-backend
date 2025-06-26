@@ -25,6 +25,6 @@ export default async (kojo, logger) => {
         const token = await AuthToken.issue({ email });
 
         res.statusCode = 201;
-        return { token, user: await User.get({ email }) };
+        return { token, user: User.shape(await User.get({ email })) };
     })
 };
