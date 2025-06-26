@@ -6,11 +6,12 @@ import os from 'os';
 import { permissionNames, suffixes } from '../dictionary/index.js';
 import { Base64Encode } from 'base64-stream';
 import { PassThrough, pipeline } from 'stream';
+import analyzeReceipt from '../functions/ChatGpt/analyzeReceipt.js';
 
 
 export default async (app, logger) => {
 
-    const { HTTP, AuthToken, User } = app.functions;
+    const { HTTP, ChatGpt } = app.functions;
     const { openAi } = app.state;
 
     HTTP.addRoute('POST /receipts', {
@@ -42,31 +43,7 @@ export default async (app, logger) => {
         ));
 
         const base64Data = Buffer.concat(chunks).toString();
+        const data = await ChatGpt.analyzeReceipt(base64Data);
 
-        try {
-            logger.debug('send request to chatGPT: analyze image');
-            const chatGptResponse = await openAi.chat.completions.create({
-                response_format: { type: 'json_object' },
-                model: 'o4-mini-2025-04-16',
-                messages: [{
-                    role: 'user',
-                    content: [
-                        { type: 'text', text: 'Analyze this receipt and return the following information:' +
-                                              'json object with receipt id, shop name, location and country and array of data objects ' +
-                                              'with category, sub-category, name, translated name, unit count, price as amount and currency.' },
-                        { type: 'image_url', image_url: { url: base64Data }}
-                    ]
-                }],
-            });
-
-            const data = JSON.parse(chatGptResponse.choices[0].message.content);
-            logger.debug(data);
-            res.statusCode = 200;
-            return { data };
-
-        } catch (error) {
-            logger.error(error.message)
-
-        }
-    })
+    });
 };

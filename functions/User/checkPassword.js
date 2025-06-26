@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 
 
-export default async function checkPassword(email, password) {
+export default async function(email, password) {
 
     const [ kojo ] = this;
     const { prisma } = kojo.state;
