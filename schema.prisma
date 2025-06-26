@@ -31,49 +31,50 @@ model AuthToken {
 }
 
 model Shop {
-    id        String   @id @db.Char(36)
-    name      String   @db.VarChar(120)
-    address   String?  @db.VarChar(255)
-    receipts  Receipt[]
+    id       String    @id @db.Char(36)
+    name     String    @db.VarChar(120)
+    address  String?   @db.VarChar(255)
+    receipts Receipt[]
+
     @@unique([name, address])
 }
 
 model Category {
-    id        Int      @id @default(autoincrement())
-    name      String   @unique
-    products  Product[]
+    id       Int       @id @default(autoincrement())
+    name     String    @unique
+    products Product[]
 }
 
 model Product {
-    id          String      @id @db.Char(36)
-    name        String      @db.VarChar(120)
-    categoryId  Int
-    category    Category    @relation(fields: [categoryId], references: [id])
-    items       ReceiptItem[]
-}
-
-model Receipt {
     id         String        @id @db.Char(36)
-    userId     String        @db.Char(36)
-    shopId     String        @db.Char(36)
-    date       DateTime
-    total      Decimal       @db.Decimal(10,2)
-    rawUrl     String        @db.VarChar(255)
-    parsed     Boolean       @default(false)
-    createdAt  DateTime      @default(now())
-    shop       Shop          @relation(fields: [shopId], references: [id])
+    name       String        @db.VarChar(120)
+    categoryId Int
+    category   Category      @relation(fields: [categoryId], references: [id])
     items      ReceiptItem[]
 }
 
-model ReceiptItem {
-    receiptId  String    @db.Char(36)
-    line       Int
-    productId  String    @db.Char(36)
-    quantity   Int
-    unitPrice  Decimal   @db.Decimal(10,2)
-    lineTotal  Decimal   @db.Decimal(10,2)
-    receipt    Receipt   @relation(fields: [receiptId], references: [id])
-    product    Product   @relation(fields: [productId], references: [id])
+model Receipt {
+    id        String        @id @db.Char(36)
+    userId    String        @db.Char(36)
+    shopId    String        @db.Char(36)
+    date      DateTime
+    total     Decimal       @db.Decimal(10, 2)
+    rawUrl    String        @db.VarChar(255)
+    parsed    Boolean       @default(false)
+    createdAt DateTime      @default(now())
+    shop      Shop          @relation(fields: [shopId], references: [id])
+    items     ReceiptItem[]
+}
 
-    @@id([receiptId, line])           // keep original line order
+model ReceiptItem {
+    receiptId String  @db.Char(36)
+    line      Int
+    productId String  @db.Char(36)
+    quantity  Int
+    unitPrice Decimal @db.Decimal(10, 2)
+    lineTotal Decimal @db.Decimal(10, 2)
+    receipt   Receipt @relation(fields: [receiptId], references: [id])
+    product   Product @relation(fields: [productId], references: [id])
+
+    @@id([receiptId, line]) // keep original line order
 }
